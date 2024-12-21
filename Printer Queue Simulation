@@ -1,0 +1,32 @@
+import time
+
+class Printer:
+    def __init__(self, printer_id):
+        self.id = printer_id
+        self.is_available = True  # Track printer availability
+
+class Job:
+    def __init__(self, job_id, timestamp):
+        self.id = job_id
+        self.timestamp = timestamp  # Track when the job was created
+
+def print_jobs(queue, printers):
+    """Assigns jobs to available printers in the order they arrived."""
+    if queue and any(printer.is_available for printer in printers):
+        job = queue.pop(0)  # Get the first job in the queue
+        for printer in printers:
+            if printer.is_available:
+                printer.is_available = False  # Mark printer busy
+                print(f"Job {job.id} (created at {job.timestamp}) is assigned to Printer {printer.id}")
+                # Simulate printing time (adjust as needed)
+                print_time = 2  # seconds
+                time.sleep(print_time)
+                printer.is_available = True  # Mark printer available again
+                break
+
+# Example usage:
+queue = [Job("job1", "10:00"), Job("job2", "10:05"), Job("job3", "10:10")]  # Jobs with timestamps
+printers = [Printer("Printer1"), Printer("Printer2")]  # Multiple printers
+
+while queue:
+    print_jobs(queue, printers)
